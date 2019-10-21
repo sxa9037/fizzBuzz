@@ -42,9 +42,25 @@ class ViewController: UIViewController {
         fizzBuzzOutput.text = ""
         let num = Int(enterNum.text!)
         fizzBuzzOutput.text = fizzBuzz(num: num!)
+        
+        if num! < 100 {
+            fizzBuzzOutput.text = "Please enter a number above 100"
+        }
     }
-
-
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        // get the current text, or use an empty string if that failed
+        let currentText = textField.text ?? ""
+        
+        // attempt to read the range they are trying to change, or exit if we can't
+        guard let stringRange = Range(range, in: currentText) else { return false }
+        
+        // add their new text to the existing text
+        let updatedText = currentText.replacingCharacters(in: stringRange, with: string)
+        
+        // make sure the result is under 16 characters
+        return updatedText.count <= 16
+    }
+    
     @IBAction func Reset(_ sender: UIButton) {
         fizzBuzzOutput.text = ""
     }
@@ -59,20 +75,25 @@ class ViewController: UIViewController {
             bangVal = num % 7
             
             
-            if fizzVal == 0 && buzzVal != 0 && bangVal != 0{ // multiples of 3
-                output += ("Fizz ")
-            } else if buzzVal == 0 && fizzVal != 0 && bangVal != 0{ // multiples of 5
-                output += ("Buzz ")
-            } else if bangVal == 0 && fizzVal != 0 && buzzVal != 0{ // multiples of 7
-                output += ("Bang ")
+            if bangVal == 0 && fizzVal == 0 && buzzVal == 0 {
+                output += ("FizzBuzzang ")
             } else if fizzVal == 0 && buzzVal == 0 && bangVal != 0{
                 output += ("FizzBuzz ")
-            } else if bangVal == 0 && fizzVal == 0 && buzzVal == 0 {
-                output += ("FizzBuzzBang ")
+            } else if bangVal == 0 && fizzVal == 0 {
+                output += ("FizzBang")
+            }  else if bangVal == 0 && buzzVal == 0 {
+                output += ("BuzzBang")
+            } else if bangVal == 0 && fizzVal != 0 && buzzVal != 0{ // multiples of 7
+                output += ("Bang ")
+            } else if fizzVal == 0{
+                output += ("Fizz ")
+            } else if buzzVal == 0 {
+                output += ("Buzz ")
             } else {
                 output += String(num) + " "
             }
         }
+        
     return output
     
     }
